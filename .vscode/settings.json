@@ -1,0 +1,9 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.adapterTargetName": "esp32s3",
+  "python.pythonPath": "D:\\Espressif\\tools\\python_env\\idf5.1_py3.9_env\\Scripts\\python.exe",
+  "idf.portWin": "COM11",
+  "idf.openOcdConfigs": [
+    "board/esp32s3-builtin.cfg"
+  ],
+}
