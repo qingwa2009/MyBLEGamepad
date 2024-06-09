@@ -3,9 +3,7 @@
  * https://controllers.fandom.com/wiki/Sony_DualSense
  * SDL-SDL2\src\joystick\hidapi\SDL_hidapi_ps5.c
 */
-/**
- * steam 好像不识别；
-*/
+
 #include "DualSenseController.h"
 #include "NimBLEDevice.h"
 #include "ble_uuid.h"

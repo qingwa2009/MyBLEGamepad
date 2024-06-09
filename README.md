@@ -119,8 +119,7 @@
         * 最后点start，开始烧录，烧完拔掉USB重新上电就可以了。
 
 - ## 视频演示：
-
-
+    * https://www.bilibili.com/video/BV1YaG6e4Eqe
 
 - ## 可能潜在的问题：
 
