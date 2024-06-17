@@ -31,9 +31,7 @@
 #include "SwitchProController.h"
 #include "DualSenseController.h"
 
-#ifndef ENABLE_LIGHT_SLEEP
 #define ENABLE_LIGHT_SLEEP true
-#endif
 
 #if ENABLE_LIGHT_SLEEP
 #define SET_PIN_LEVEL_AND_HOLD(x, v) \
@@ -135,21 +133,25 @@ void reset(bool byTWDT)
 {
 
     //取消掉IO的保持功能，不然软重置也重置不了
-    gpio_hold_dis(PIN_LED_1);
-    gpio_hold_dis(PIN_LED_2);
-    gpio_hold_dis(PIN_LED_3);
-    gpio_hold_dis(PIN_LED_4);
-    gpio_hold_dis(PIN_I2C_VCC);
-    gpio_hold_dis(PIN_SWITCH_ON_OFF);
+    // gpio_hold_dis(PIN_LED_1);
+    // gpio_hold_dis(PIN_LED_2);
+    // gpio_hold_dis(PIN_LED_3);
+    // gpio_hold_dis(PIN_LED_4);
+    // gpio_hold_dis(PIN_I2C_VCC);
+    // gpio_hold_dis(PIN_SWITCH_ON_OFF);
     if (byTWDT)
         esp_system_abort("reset by watch dog!!!");
     else
         esp_system_abort("reset by press xbox btn!!!");
 }
 
-void powOn()
+void initPowPin()
 {
     gpio_sleep_set_direction(PIN_SWITCH_ON_OFF, GPIO_MODE_OUTPUT);
+}
+
+void powOn()
+{
     _isPowOff = 0;
     connectBattery();
 }
@@ -746,7 +748,7 @@ void initPowSave(bool enableLightSleep)
     esp_pm_config_t cfg = {
         .max_freq_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
         .min_freq_mhz = 40,
-        .light_sleep_enable = ENABLE_LIGHT_SLEEP};
+        .light_sleep_enable = enableLightSleep};
     ESP_ERROR_CHECK(esp_pm_configure(&cfg));
 }
 
@@ -758,6 +760,7 @@ void onlyChargeMode()
     esp_wifi_bt_power_domain_off();
     initPowSave(true);
 
+    gpio_sleep_set_direction(PIN_SWITCH_ON_OFF, GPIO_MODE_OUTPUT);
     //临时接上电池，用于测量电池电压。
     connectBattery();
     DELAY(100);
@@ -1314,6 +1317,7 @@ void app_main(void)
 
     isPowOnByPushBtn = isBatteryConnected();
     ESP_LOGI(TAG, "------------isPowOnByPushBtn: %d------------", isPowOnByPushBtn);
+    initPowPin();
     if (isPowOnByPushBtn)
     {
         powOn();
