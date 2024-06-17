@@ -33,19 +33,6 @@
 
 #define ENABLE_LIGHT_SLEEP true
 
-#if ENABLE_LIGHT_SLEEP
-#define SET_PIN_LEVEL_AND_HOLD(x, v) \
-    do                               \
-    {                                \
-        gpio_hold_dis((x));          \
-        gpio_set_level((x), (v));    \
-        if (!_isPowOff)              \
-            gpio_hold_en((x));       \
-    } while (0)
-#else
-#define SET_PIN_LEVEL_AND_HOLD(x, v) gpio_set_level((x), (v))
-#endif
-
 #define TIME_HOLDE_POW_OFF_MS 3000
 #define BTN_PIN_LEVEL_STABLE_DELAY_NOP_COUNT 1 //按键电平切换稳定所需的空语句计数
 
@@ -101,12 +88,10 @@ extern "C"
 void connectBattery()
 {
     //在bootloader已经做了输入输出的设置
-    // SET_PIN_LEVEL_AND_HOLD(PIN_SWITCH_ON_OFF, 1);
     gpio_set_level(PIN_SWITCH_ON_OFF, 1);
 }
 void disconnectBattery()
 {
-    // SET_PIN_LEVEL_AND_HOLD(PIN_SWITCH_ON_OFF, 0);
     gpio_set_level(PIN_SWITCH_ON_OFF, 0);
 }
 
@@ -119,10 +104,7 @@ int isBatteryConnected()
 //0b0000~0b1111
 void setLEDState(uint8_t state)
 {
-    // SET_PIN_LEVEL_AND_HOLD(PIN_LED_1, state & 0b0001);
-    // SET_PIN_LEVEL_AND_HOLD(PIN_LED_2, state & 0b0010);
-    // SET_PIN_LEVEL_AND_HOLD(PIN_LED_3, state & 0b0100);
-    // SET_PIN_LEVEL_AND_HOLD(PIN_LED_4, state & 0b1000);
+
     gpio_set_level(PIN_LED_1, state & 0b0001);
     gpio_set_level(PIN_LED_2, state & 0b0010);
     gpio_set_level(PIN_LED_3, state & 0b0100);
@@ -143,11 +125,6 @@ void reset(bool byTWDT)
         esp_system_abort("reset by watch dog!!!");
     else
         esp_system_abort("reset by press xbox btn!!!");
-}
-
-void initPowPin()
-{
-    gpio_sleep_set_direction(PIN_SWITCH_ON_OFF, GPIO_MODE_OUTPUT);
 }
 
 void powOn()
@@ -525,7 +502,6 @@ int getIMUEnabled()
 }
 void disableIMU()
 {
-    // SET_PIN_LEVEL_AND_HOLD(PIN_I2C_VCC, 0);
     gpio_set_level(PIN_I2C_VCC, 0);
     isIMUEnabled = 0;
 }
@@ -537,8 +513,6 @@ void enableIMU()
 
     gpio_reset_pin(PIN_I2C_VCC);
     gpio_set_direction(PIN_I2C_VCC, GPIO_MODE_OUTPUT);
-    gpio_sleep_set_direction(PIN_I2C_VCC, GPIO_MODE_OUTPUT);
-    // SET_PIN_LEVEL_AND_HOLD(PIN_I2C_VCC, 1);
     gpio_set_level(PIN_I2C_VCC, 1);
     DELAY(10); //等上电稳定
 
@@ -737,10 +711,6 @@ void initLED()
     gpio_set_direction(PIN_LED_2, GPIO_MODE_OUTPUT);
     gpio_set_direction(PIN_LED_3, GPIO_MODE_OUTPUT);
     gpio_set_direction(PIN_LED_4, GPIO_MODE_OUTPUT);
-    gpio_sleep_set_direction(PIN_LED_1, GPIO_MODE_OUTPUT);
-    gpio_sleep_set_direction(PIN_LED_2, GPIO_MODE_OUTPUT);
-    gpio_sleep_set_direction(PIN_LED_3, GPIO_MODE_OUTPUT);
-    gpio_sleep_set_direction(PIN_LED_3, GPIO_MODE_OUTPUT);
 }
 
 void initPowSave(bool enableLightSleep)
@@ -760,7 +730,6 @@ void onlyChargeMode()
     esp_wifi_bt_power_domain_off();
     initPowSave(true);
 
-    gpio_sleep_set_direction(PIN_SWITCH_ON_OFF, GPIO_MODE_OUTPUT);
     //临时接上电池，用于测量电池电压。
     connectBattery();
     DELAY(100);
@@ -1317,7 +1286,9 @@ void app_main(void)
 
     isPowOnByPushBtn = isBatteryConnected();
     ESP_LOGI(TAG, "------------isPowOnByPushBtn: %d------------", isPowOnByPushBtn);
-    initPowPin();
+    //禁用睡眠时切换gpio状态
+    esp_sleep_enable_gpio_switch(false);
+
     if (isPowOnByPushBtn)
     {
         powOn();
