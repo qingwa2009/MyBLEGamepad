@@ -763,6 +763,7 @@ void onlyChargeMode()
         if (t_measBatt > (30 * 1000))
         {
             //每隔30秒测一次电压
+            _measureBatt();
             level = getBatteryLevel();
             t_measBatt = 0;
             ESP_LOGI(TAG, "battery level: %d", level);
@@ -770,9 +771,8 @@ void onlyChargeMode()
             disconnectBattery();
         }
 
-        uint32_t t0 = ((150) * sizeof(state2));
         t_showingBatt += dt;
-        if (t_showingBatt < t0)
+        if (t_showingBatt < ((150) * sizeof(state2)))
         {
             //LED电量滚动效果
             int i = (t_showingBatt / (150)) % sizeof(state2);
