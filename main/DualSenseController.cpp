@@ -402,21 +402,17 @@ void DualSenseController::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox
     case HID_RPT_ID_INPUT_01:
         if (!this->isKeyStateChange(keys, btnXbox, btnSelect, x, y, z, rz, lt, rt))
         {
-            DELAY(SEND_PERIOD_MS);
             return;
         }
         _handleReportIn01(dt, keys, btnXbox, btnSelect, x, y, z, rz, lt, rt);
         // ESP_LOGI(TAG, "HID_RPT_ID_INPUT_01");
-        DELAY(SEND_PERIOD_MS);
         break;
     case HID_RPT_ID_INPUT_31:
         // if (hasOut31Ev)
         _handleReportIn31(dt, keys, btnXbox, btnSelect, x, y, z, rz, lt, rt);
         // ESP_LOGI(TAG, "HID_RPT_ID_INPUT_31");
-        DELAY(SEND_PERIOD_MS);
         break;
     default:
-        DELAY(SEND_PERIOD_MS * 3);
         break;
     }
 }

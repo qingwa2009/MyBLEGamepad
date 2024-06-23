@@ -174,7 +174,6 @@ void XboxOneGamepad::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox, uin
 {
     if (!this->isKeyStateChange(keys, btnXbox, btnSelect, x, y, z, rz, lt, rt))
     {
-        DELAY(SEND_PERIOD_MS);
         return;
     }
 
@@ -211,7 +210,6 @@ void XboxOneGamepad::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox, uin
         // ESP_LOGI(TAG, "BIBI");
         _iRptChara->notify((uint8_t *)&ip, sizeof(ip), true, BLE_HCI_LE_CONN_HANDLE_MAX + 1);
     }
-    DELAY(SEND_PERIOD_MS);
 }
 
 void XboxOneGamepad::onRead(NimBLECharacteristic *pCharacteristic, NimBLEConnInfo &connInfo)

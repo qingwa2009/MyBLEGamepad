@@ -1163,7 +1163,7 @@ void workMode()
         initPowSave(ENABLE_LIGHT_SLEEP);
 
         int64_t lastT = esp_timer_get_time();
-
+        TickType_t xlastTick = xTaskGetTickCount();
         while (1)
         {
 
@@ -1207,8 +1207,8 @@ void workMode()
             }
             else
             {
-                DELAY(15);
             }
+            xTaskDelayUntil(&xlastTick, powBoostMode ? BOOST_SEND_PERIOD_MS : DEFAULT_SEND_PERIOD_MS);
         }
     }
     else

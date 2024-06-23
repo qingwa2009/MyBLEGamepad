@@ -14,13 +14,13 @@
 // Supervision timeout value (units of 10ms) if automatic parameter update request is enabled
 #define DEFAULT_SUPERVISION_TIMEOUT 300
 
-#define DEFAULT_SEND_PERIOD_MS 14 //发送间隔ms
+#define DEFAULT_SEND_PERIOD_MS 15 //发送间隔ms
 
 #define BOOST_DESIRED_MIN_CONN_INTERVAL 6
 #define BOOST_DESIRED_MAX_CONN_INTERVAL 6
 #define BOOST_DESIRED_SLAVE_LATENCY 0
 #define BOOST_DESIRED_SLAVE_LATENCY 0
-#define BOOST_SEND_PERIOD_MS 6 //发送间隔ms
+#define BOOST_SEND_PERIOD_MS 7 //发送间隔ms
 
 #define BUILD_UINT16(loByte, hiByte) \
     ((uint16_t)(((loByte)&0x00FF) + (((hiByte)&0x00FF) << 8)))

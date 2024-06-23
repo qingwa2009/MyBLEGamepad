@@ -319,11 +319,9 @@ void SwitchProController::setSTDOrFullInputPacket(KeyMatrix_t *keys, uint8_t btn
         getIMUMotionData((int16_t *)&ipacket.imuData1);
         DELAY(SEND_PERIOD_MS / 3);
         getIMUMotionData((int16_t *)&ipacket.imuData2);
-        DELAY(SEND_PERIOD_MS / 3);
     }
     else
     {
-        DELAY(SEND_PERIOD_MS);
     }
 }
 void SwitchProController::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox, uint8_t btnSelect, int x, int y, int z, int rz, int lt, int rt)
@@ -344,7 +342,6 @@ void SwitchProController::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox
     case HID_RPT_ID_INPUT:
         if (!this->isKeyStateChange(keys, btnXbox, btnSelect, x, y, z, rz, lt, rt))
         {
-            DELAY(SEND_PERIOD_MS);
             break;
         }
         ip.btnA = keys->A;
@@ -376,10 +373,8 @@ void SwitchProController::update(uint32_t dt, KeyMatrix_t *keys, uint8_t btnXbox
         if (_iRptChara->getSubscribedCount())
             _iRptChara->notify((uint8_t *)&ip, sizeof(ip), true, BLE_HCI_LE_CONN_HANDLE_MAX + 1);
 
-        DELAY(SEND_PERIOD_MS);
         break;
     default:
-        DELAY(SEND_PERIOD_MS);
         break;
     }
 }
