@@ -83,7 +83,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues;
 
-    waitForStable();
+    // waitForStable();
     //row 1
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(1));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
@@ -91,7 +91,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues << 4;
 
-    waitForStable();
+    // waitForStable();
     //row 2
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(2));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
@@ -99,7 +99,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues << 8;
 
-    waitForStable();
+    // waitForStable();
     //row 3
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(3));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
@@ -110,6 +110,43 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, 0xff);
 
     return v;
+}
+
+void keepHighMyKeypadMatrix(uint16_t *keys, uint32_t dt, uint32_t keepHighMS)
+{
+    static int ms[16] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}; //-1 说明按键可以立即触发
+    for (size_t i = 0; i < 16; i++)
+    {
+        if (ms[i] > 0) //计时器大于0时
+        {
+            (*keys) |= (1 << i); //按键持续设为按下
+            ms[i] -= dt;
+            if (ms[i] < 0)
+                ms[i] = 0; //计时器清0表示按下够长时间了
+        }
+        if (ms[i] < 0) //计时器小于0
+        {
+            if (((*keys) & (1 << i))) //按键处于按下状态，说明按键才刚刚按下
+            {
+                ms[i] = keepHighMS; //启动计时器
+            }
+            else //按键依旧松开
+            {
+                // ms[i] = -1;
+            }
+        }
+        else //计时器等于0，说明按键依旧保持足够的按下时间了
+        {
+            if (((*keys) & (1 << i))) //按键依旧处于按下状态
+            {
+                // ms[i]=0;//按下够长时间了
+            }
+            else //按键松开了
+            {
+                ms[i] = -1; //按键可以立即触发跳转
+            }
+        }
+    }
 }
 
 void printMyKeypadMatrix(const char *TAG, uint16_t keys, uint8_t oneRowFormate)

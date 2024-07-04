@@ -38,6 +38,10 @@ extern "C"
      * ESP_LOGI(TAG, )打印scanMyKeyMatrix返回的值
     */
     void printMyKeypadMatrix(const char *TAG, uint16_t keys, uint8_t oneRowFormate);
+    /**
+     * 防抖
+    */
+    void keepHighMyKeypadMatrix(uint16_t *keys, uint32_t dt, uint32_t keepHighMS);
 #ifdef __cplusplus
 }
 #endif

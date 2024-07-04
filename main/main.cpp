@@ -1182,6 +1182,7 @@ void workMode()
             }
 
             ks = scanMyKeyMatrix(BTN_PIN_LEVEL_STABLE_DELAY_NOP_COUNT);
+            keepHighMyKeypadMatrix(&ks, dt, 20);
             keys = (KeyMatrix_t *)&ks;
             // printMyKeypadMatrix(TAG, ks, 1);
 
