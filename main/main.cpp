@@ -538,6 +538,7 @@ void enableIMU()
     mpu.setYGyroOffset(gyroy);
     mpu.setZGyroOffset(gyroz);
 
+    mpu.setDLPFMode(1);                                //降低采样率
     uint8_t gyroRate = mpu.getDLPFMode() == 0 ? 8 : 1; //k
     uint8_t sampleDiv = mpu.getRate();
 
