@@ -1,9 +1,12 @@
 {
-  "C_Cpp.intelliSenseEngine": "default",
+  "C_Cpp.intelliSenseEngine": "Default",
   "idf.adapterTargetName": "esp32s3",
-  "python.pythonPath": "D:\\Espressif\\tools\\python_env\\idf5.1_py3.9_env\\Scripts\\python.exe",
-  "idf.portWin": "COM11",
+  "idf.portWin": "COM5",
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
+  "python.pythonPath": "d:\\Espressif\\python_env\\idf5.1_py3.11_env\\Scripts\\python.exe",
+  "idf.flashType": "UART",
+  "restructuredtext.syntaxHighlighting.disabled": true,
+  "restructuredtext.preview.docutils.disabled": true,
 }
