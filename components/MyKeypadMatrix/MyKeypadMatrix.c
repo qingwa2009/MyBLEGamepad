@@ -83,7 +83,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues;
 
-    // waitForStable();
+    waitForStable();
     //row 1
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(1));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
@@ -91,7 +91,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues << 4;
 
-    // waitForStable();
+    waitForStable();
     //row 2
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(2));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
@@ -99,7 +99,7 @@ uint16_t scanMyKeyMatrix(uint8_t btnLevelSwitchDelayNopCount)
     colValues = dedic_gpio_bundle_read_in(colHandles);
     v |= (uint16_t)colValues << 8;
 
-    // waitForStable();
+    waitForStable();
     //row 3
     dedic_gpio_bundle_write(rowHandles, (1 << PIN_ROW_COUNT) - 1, ~BIT(3));
     for (size_t i = 0; i < btnLevelSwitchDelayNopCount; i++)
